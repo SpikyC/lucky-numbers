@@ -1,6 +1,6 @@
 {
-  "short_name": "[Board Game]",
-  "name": "[Name of the Board Game]",
+  "short_name": "Lucky Numbers",
+  "name": "Lucky Numbers",
   "icons": [
     {
       "src": "favicon.ico",
@@ -21,6 +21,6 @@
   "start_url": ".",
   "display": "fullscreen",
   "orientation": "landscape",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#aa9142",
+  "background_color": "#3c633a"
 }

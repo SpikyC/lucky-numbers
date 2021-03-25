@@ -1,10 +1,10 @@
-import {css, Global} from '@emotion/react'
-import MyBoardGame from '@gamepark/board-game-template/MyBoardGame'
-import {MyBoardGameOptionsDescription} from '@gamepark/board-game-template/MyBoardGameOptions'
-import MyBoardGameView from '@gamepark/board-game-template/MyBoardGameView'
-import {GameProvider, setupTranslation} from '@gamepark/react-client'
+import { css, Global } from '@emotion/react'
+import LuckyNumbers from '@gamepark/lucky-numbers/LuckyNumbers'
+import { LuckyNumbersView } from '@gamepark/lucky-numbers/LuckyNumbersView'
+// import { LuckyNumbersOptionsDescription } from '@gamepark/lucky-numbers/LuckyNumbersOptions'
+import { GameProvider, setupTranslation } from '@gamepark/react-client'
 import normalize from 'emotion-normalize'
-import {StrictMode} from 'react'
+import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import translations from './translations.json'
@@ -59,7 +59,12 @@ const style = css`
 
 ReactDOM.render(
   <StrictMode>
-    <GameProvider game="my-board-game" Rules={MyBoardGame} RulesView={MyBoardGameView} optionsDescription={MyBoardGameOptionsDescription}>
+    <GameProvider
+      game="lucky-numbers"
+      Rules={LuckyNumbers}
+      RulesView={LuckyNumbersView}
+      // optionsDescription={LuckyNumbersOptionsDescription}
+    >
       <App/>
     </GameProvider>
     <Global styles={[normalize, style]}/>

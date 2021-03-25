@@ -1,9 +1,12 @@
 {
-  "name": "@gamepark/board-game-template-app",
-  "version": "0.0.0",
+  "name": "@gamepark/lucky-numbers-app",
+  "version": "0.0.1",
   "private": true,
   "description": "React application",
   "author": "Romain Fromi <romain@game-park.com> (https://game-park.com/)",
+  "contributors": [
+    "Chany Arpin-Plante <chany.arpin@gmail.com>"
+  ],
   "license": "ISC",
   "dependencies": {
     "@emotion/react": "^11.1.5",
@@ -12,10 +15,6 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "@types/jest": "^26.0.15",
-    "@types/react-dnd-multi-backend": "^6.0.0",
-    "@types/react-dom": "^17.0.0",
-    "@types/react-redux": "^7.1.16",
     "customize-cra": "^1.0.0",
     "emotion-normalize": "^11.0.1",
     "i18next": "^19.9.1",
@@ -33,6 +32,12 @@
     "react-redux": "^7.2.2",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.15",
+    "@types/react-dnd-multi-backend": "^6.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-redux": "^7.1.16"
   },
   "scripts": {
     "start": "react-app-rewired start",

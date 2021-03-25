@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import {css, keyframes} from '@emotion/react'
-import GameState from '@gamepark/board-game-template/GameState'
-import {Letterbox} from '@gamepark/react-components'
+import { css, keyframes } from '@emotion/react'
+import { GameState } from '@gamepark/lucky-numbers/GameState'
+import { Letterbox } from '@gamepark/react-components'
 
 type Props = {
   game: GameState

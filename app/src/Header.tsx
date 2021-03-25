@@ -1,16 +1,18 @@
 /** @jsxImportSource @emotion/react */
-import {css} from '@emotion/react'
-import GameState from '@gamepark/board-game-template/GameState'
-import {useTranslation} from 'react-i18next'
+import { css } from '@emotion/react'
+import { GameState } from '@gamepark/lucky-numbers/GameState'
+import { usePlayerId } from '@gamepark/react-client'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   loading: boolean
   game?: GameState
 }
 
-export default function Header({loading, game}: Props) {
-  const {t} = useTranslation()
-  const text = loading ? t('Game loading…') : `Loaded! Now what? Your player id is ${game?.players[0].color}`
+export default function Header({ loading }: Props) {
+  const { t } = useTranslation()
+  const playerId = usePlayerId<number>()!
+  const text = loading ? t('Game loading…') : `Loaded! Now what? Your player id is ${playerId}`
   return (
     <header css={style}>
       <h1 css={titleStyle}>{text}</h1>
