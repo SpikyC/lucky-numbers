@@ -1,18 +1,18 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { GameState } from '@gamepark/lucky-numbers/GameState'
+import { GameView } from '@gamepark/lucky-numbers/GameView'
 import { usePlayerId } from '@gamepark/react-client'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
   loading: boolean
-  game?: GameState
+  game?: GameView
 }
 
-export default function Header({ loading }: Props) {
+export function Header({ loading }: Props) {
   const { t } = useTranslation()
   const playerId = usePlayerId<number>()!
-  const text = loading ? t('Game loading…') : `Loaded! Now what? Your player id is ${playerId}`
+  const text = loading ? t('notification.loading') : `Loaded! Now what? Your player id is ${playerId}`
   return (
     <header css={style}>
       <h1 css={titleStyle}>{text}</h1>
@@ -42,3 +42,5 @@ const titleStyle = css`
   text-overflow: ellipsis;
   overflow: hidden;
 `
+
+export default Header

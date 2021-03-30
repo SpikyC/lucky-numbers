@@ -2,7 +2,7 @@ import { GameState } from '../GameState'
 import { GameView } from '../GameView'
 import { nextPlayer } from '../LuckyNumbers'
 import { addTileToBoard } from '../material/Board'
-import { removeTileFromDiscard } from '../material/Discard'
+import { addTileToDiscard, removeTileFromDiscard } from '../material/Discard'
 import { Move } from './Move'
 import { MoveType } from './MoveType'
 
@@ -18,8 +18,18 @@ export function isPlaceFromDiscard(move: Move): move is PlaceFromDiscard {
 }
 
 export function placeFromDiscard(state: GameState | GameView, move: PlaceFromDiscard) {
-  addTileToBoard(state.players[move.playerId].board, removeTileFromDiscard(state.discard, move.from), move.to)
+  const { discard, players } = state
+  const { board } = players[move.playerId]
+
+  addTileToDiscard(discard, addTileToBoard(board, removeTileFromDiscard(discard, move.from), move.to))
   nextPlayer(state)
 }
+
+export const placeFromDiscardMove = (playerId: number, from: number, to: number): PlaceFromDiscard => ({
+  type: MoveType.PlaceFromDiscard,
+  playerId,
+  from,
+  to,
+})
 
 export default PlaceFromDiscard

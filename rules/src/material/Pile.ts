@@ -1,6 +1,6 @@
-import shuffle from "../util/shuffle";
-import { Tile } from "./Tile";
-import { TileColor } from "./TileColor";
+import shuffle from '../util/shuffle'
+import { Tile } from './Tile'
+import { TileColor } from './TileColor'
 
 export type Pile = Tile[]
 
@@ -12,7 +12,7 @@ export function initializePile(players: number): Tile[] {
   })))
 }
 
-export function removeTileFromPile(pile: Pile, position: number): Tile {
+export function removeTileFromPile<P = Tile | null | boolean>(pile: P[], position: number): P {
   const tile = pile[position]
   delete pile[position]
   return tile

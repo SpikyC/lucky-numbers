@@ -25,6 +25,7 @@ export class LuckyNumbersView implements Game<GameView, MoveView> {
    * @param move The move that must be applied in the browser of the player or the spectator
    */
   play(move: MoveView): void {
+    console.log({...move, origin: 'client'});
     switch (move.type) {
       case MoveType.DiscardTile:
         return discardTile(this.state, move)

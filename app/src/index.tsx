@@ -6,10 +6,12 @@ import { GameProvider, setupTranslation } from '@gamepark/react-client'
 import normalize from 'emotion-normalize'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
+import { LuckyNumbersAnimations } from './Animations'
+import { App } from './App'
+import Images from './material/Images'
 import translations from './translations.json'
 
-setupTranslation(translations)
+setupTranslation(translations, { keySeparator: '.' })
 
 const style = css`
   html {
@@ -40,6 +42,7 @@ const style = css`
     user-select: none;
     overflow: hidden;
     background-color: white;
+    background-image: url(${Images.backgroundA});
     background-size: cover;
     background-position: center;
     color: #eee;
@@ -60,14 +63,15 @@ const style = css`
 ReactDOM.render(
   <StrictMode>
     <GameProvider
+      animations={LuckyNumbersAnimations}
       game="lucky-numbers"
       Rules={LuckyNumbers}
       RulesView={LuckyNumbersView}
-      // optionsDescription={LuckyNumbersOptionsDescription}
+    // optionsDescription={LuckyNumbersOptionsDescription}
     >
-      <App/>
+      <App />
     </GameProvider>
-    <Global styles={[normalize, style]}/>
+    <Global styles={[normalize, style]} />
   </StrictMode>,
   document.getElementById('root')
 )

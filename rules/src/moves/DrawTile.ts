@@ -17,11 +17,24 @@ export type DrawTileView = DrawTile & {
 }
 
 export function drawTile(state: GameState, move: DrawTile) {
-  addTileToReserve(state.players[move.playerId].reserve, removeTileFromPile(state.pile, move.position))
+  const {pile, players} = state
+  const { reserve } = players[move.playerId]
+
+  addTileToReserve(reserve, removeTileFromPile(pile, move.position))
 }
 
+export const drawTileMove = (playerId: number, position: number): DrawTile => ({
+  type: MoveType.DrawTile,
+  playerId,
+  position,
+})
+
 export function drawTileView(state: GameView, move: DrawTileView) {
-  addTileToReserve(state.players[move.playerId].reserve, move.tile)
+  const { pile, players } = state
+  const { reserve } = players[move.playerId]
+
+  removeTileFromPile(pile, move.position)
+  addTileToReserve(reserve, move.tile)
 }
 
 export function isDrawTile(move: Move): move is (DrawTile | DrawTileView) {

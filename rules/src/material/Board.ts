@@ -23,6 +23,10 @@ export function isComplete(board: Board): boolean {
   return board.filter(isTile).length === 16
 }
 
+export function isTileInReserve(reserve: Reserve, {color, value}: Tile): boolean {
+  return reserve.some((tile) => tile && tile.color === color && tile.value === value)
+}
+
 export function isValid(board: Board): boolean {
   let valid = true
 

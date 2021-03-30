@@ -5,12 +5,12 @@ import { isGameOptions, LuckyNumbersOptions } from './LuckyNumbersOptions'
 import { getBoardSize, getLastTileFromReserve, getReserveLength, isValid } from './material/Board'
 import { initializePile } from './material/Pile'
 import { isTile } from './material/Tile'
-import { discardTile } from './moves/DiscardTile'
-import { drawTile } from './moves/DrawTile'
+import { discardTile, discardTileMove } from './moves/DiscardTile'
+import { drawTile, drawTileMove } from './moves/DrawTile'
 import { Move, MoveView } from './moves/Move'
 import { MoveType } from './moves/MoveType'
-import { placeFromDiscard } from './moves/PlaceFromDiscard'
-import { placeTile } from './moves/PlaceTile'
+import { placeFromDiscard, placeFromDiscardMove } from './moves/PlaceFromDiscard'
+import { placeTile, placeTileMove } from './moves/PlaceTile'
 import { Player } from './Player'
 import { Stage } from './Stage'
 
@@ -62,61 +62,7 @@ export default class LuckyNumbers extends SimultaneousGame<GameState, Move>
    * - A class that implements "Dummy" to provide a custom Dummy player.
    */
   getLegalMoves(playerId: number): Move[] {
-    const { discard, pile, players, stage } = this.state
-    const { board, reserve } = players[playerId]
-    const moves: Move[] = []
-
-    switch (stage) {
-      case Stage.SETUP:
-        if (!getBoardSize(board) && reserve.length < 4) {
-          pile.forEach((tile, position) => {
-            if (isTile(tile)) {
-              moves.push({type: MoveType.DrawTile, playerId, position})
-            }
-          })
-        } else if (getBoardSize(board) < 4) {
-          reserve.forEach((tile) => {
-            if (isTile(tile)) {
-              const validPositions = [0, 5, 10, 15]
-              validPositions.forEach((position) => {
-                if (!board[position]) {
-                  moves.push({type: MoveType.PlaceTile, playerId, position, tile})
-                }
-              })
-            }
-          })
-        }
-        break
-      case Stage.GAME:
-        if (getReserveLength(reserve)) {
-          const tile = getLastTileFromReserve(reserve)
-          moves.push({type: MoveType.DiscardTile, playerId, tile})
-          board.forEach((_, position, array) => {
-            array[position] = tile
-            if (isValid(array)) {
-              moves.push({type: MoveType.PlaceTile, playerId, position, tile})
-            }
-          })
-        } else {
-          pile.forEach((tile, position) => {
-            if (isTile(tile)) {
-              moves.push({type: MoveType.DrawTile, playerId, position})
-            }
-          })
-          discard.forEach((tile, from) => {
-            if (isTile(tile)) {
-              board.forEach((_, to, array) => {
-                array[to] = tile
-                if (isValid(array)) {
-                  moves.push({type: MoveType.PlaceFromDiscard, from, playerId, to})
-                }
-              })
-            }
-          })
-        }
-        break
-    }
-    return moves
+    return getLegalMoves(this.state, playerId)
   }
 
   /**
@@ -152,8 +98,7 @@ export default class LuckyNumbers extends SimultaneousGame<GameState, Move>
   }
 
   isActive(playerId: number): boolean {
-    const { activePlayer, players, stage } = this.state
-    return stage === Stage.SETUP ? getBoardSize(players[playerId].board) < 4 : playerId === activePlayer
+    return isActive(this.state, playerId)
   }
 
   /**
@@ -169,6 +114,7 @@ export default class LuckyNumbers extends SimultaneousGame<GameState, Move>
    * @param move The move that should be applied to current state.
    */
   play(move: Move): void {
+    console.log({...move, origin: 'server'});
     switch (move.type) {
       case MoveType.DiscardTile:
         return discardTile(this.state, move)
@@ -182,6 +128,11 @@ export default class LuckyNumbers extends SimultaneousGame<GameState, Move>
   }
 }
 
+export function isActive(game: GameState | GameView, playerId: number): boolean {
+  const { activePlayer, players, stage } = game
+  return stage === Stage.SETUP ? getBoardSize(players[playerId].board) < 4 : playerId === activePlayer
+}
+
 function isOver(game: GameState | GameView): boolean {
   return game.players.some(({board}) => getBoardSize(board) === 16) || !game.pile.length
 }
@@ -191,6 +142,66 @@ function isReady(game: GameState | GameView): boolean {
     return game.players.every(({board}) => getBoardSize(board) === 4)
   }
   return true
+}
+
+function getLegalMoves(game: GameState | GameView, playerId: number): Move[] {
+  const { discard, pile, players, stage } = game as GameState
+    const { board, reserve } = players[playerId]
+    const moves: Move[] = []
+
+    switch (stage) {
+      case Stage.SETUP:
+        if (!getBoardSize(board) && reserve.length < 4) {
+          pile.forEach((tile, position) => {
+            if (isTile(tile)) {
+              moves.push(drawTileMove(playerId, position))
+            }
+          })
+        } else if (getBoardSize(board) < 4) {
+          reserve.forEach((tile) => {
+            if (isTile(tile)) {
+              const validPositions = [0, 5, 10, 15]
+              validPositions.forEach((position) => {
+                if (!board[position]) {
+                  moves.push(placeTileMove(playerId, tile, position))
+                }
+              })
+            }
+          })
+        }
+        break
+      case Stage.GAME:
+        if (getReserveLength(reserve)) {
+          const tile = getLastTileFromReserve(reserve)
+          moves.push(discardTileMove(playerId, tile))
+          board.forEach((_, position) => {
+            const array = board.slice()
+            array[position] = tile
+            if (isValid(array)) {
+              moves.push(placeTileMove(playerId, tile, position))
+            }
+          })
+        } else {
+          pile.forEach((tile, position) => {
+            if (isTile(tile)) {
+              moves.push(drawTileMove(playerId, position))
+            }
+          })
+          discard.forEach((tile, from) => {
+            if (isTile(tile)) {
+              board.forEach((_, to) => {
+                const array = board.slice()
+                array[to] = tile
+                if (isValid(array)) {
+                  moves.push(placeFromDiscardMove(playerId, from, to))
+                }
+              })
+            }
+          })
+        }
+        break
+    }
+    return moves
 }
 
 export function nextPlayer(game: GameState | GameView): void {

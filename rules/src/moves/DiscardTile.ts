@@ -14,9 +14,18 @@ export interface DiscardTile {
 }
 
 export function discardTile(state: GameState | GameView, move: DiscardTile): void {
-  addTileToDiscard(state.discard, removeTileFromReserve(state.players[move.playerId].reserve, move.tile))
+  const { discard, players } = state
+  const { reserve } = players[move.playerId]
+
+  addTileToDiscard(discard, removeTileFromReserve(reserve, move.tile))
   nextPlayer(state)
 }
+
+export const discardTileMove = (playerId: number, tile: Tile): DiscardTile => ({
+  type: MoveType.DiscardTile,
+  playerId,
+  tile,
+})
 
 export function isDiscardTile(move: Move): move is DiscardTile {
   return move.type === MoveType.DiscardTile
